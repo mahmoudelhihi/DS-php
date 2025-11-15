@@ -11,14 +11,16 @@ class Node
         $this->value = $v;
     }
 
-    public function isEmpty()
+    public function isEmpty(): bool
     {
-        return (bool) $this->value;
+        return $this->value === null ? true : false;
     }
 
     public function push(int $new): void
     {
-        $this->fillFirstIfEmpty($new);
+        if($this->fillFirstIfEmpty($new)){
+            return;
+        }
         $n = &$this;
         while($n->next !== null) $n = $n->next;
         $newNode = new Node($new);
@@ -27,7 +29,9 @@ class Node
 
     public function pushStart(int $new): void
     {
-        $this->fillFirstIfEmpty($new);
+        if($this->fillFirstIfEmpty($new)){
+            return;
+        }
         $n = &$this;
         $newNode = new Node($this->value);
         $newNode->next = $this->next;
@@ -78,12 +82,13 @@ class Node
         return $n;
     }
 
-    private function fillFirstIfEmpty(int $new): void
+    private function fillFirstIfEmpty(int $new): bool
     {
         if($this->isEmpty()){
             $this->value = $new;
-            return;
+            return true;
         }
+        return false;
     }
 
     public function __toString(): string
