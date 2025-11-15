@@ -47,7 +47,7 @@ class Node
         return $this;
     }
 
-    public function last(): Node
+    private function &lastNode(): Node
     {
         if($this->isEmpty()){
             throw new UnderflowException("The Stack is empty!\n");
@@ -57,9 +57,14 @@ class Node
         return $n;
     }
 
+    public function last(): Node
+    {
+        return $this->lastNode();
+    }
+
     public function popEnd(): int
     {
-        $n = $this->last();
+        $n = &$this->lastNode();
         $val = $n->value;
         $n = null;
         return $val;
@@ -76,10 +81,21 @@ class Node
     public function at(int $index): Node|null
     {
         $n = $this;
-        for($i = 0; $i <= $index && $n?->next !== null; $i++){
+        for($i = 0; $i < $index; $i++){
             $n = &$n->next;
         }
         return $n;
+    }
+
+    public function count(): int
+    {
+        $n = $this;
+        $count = 0;
+        while($n->next !== null){
+            $n = &$n->next;
+            $count++;
+        }
+        return $count;
     }
 
     private function fillFirstIfEmpty(int $new): bool

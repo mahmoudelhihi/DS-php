@@ -1,15 +1,13 @@
 <?php
 declare(strict_types=1);
 
-require_once './shared.php';
-
 class Stack
 {
     public int $capacity;
     private int $count = 0;
     private array|Node $elements;
 
-    public function __construct(int $s, $type) {
+    public function __construct(int $s, array|Node $type) {
         $this->capacity = $s;
         $this->elements = $type;
     }
@@ -64,12 +62,12 @@ class Stack
         return $first;
     }
 
-    public function size()
+    public function size(): int
     {
         return $this->count;
     }
 
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         return match (get_debug_type($this->elements)) {
             'array' => empty($this->elements),
