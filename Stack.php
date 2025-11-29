@@ -3,36 +3,30 @@ declare(strict_types=1);
 
 class Stack
 {
-    public int $capacity;
     private int $count = 0;
     private array|Node $elements;
 
-    public function __construct(int $s, array|Node $type) {
-        $this->capacity = $s;
+    public function __construct(array|Node $type) {
         $this->elements = $type;
     }
 
-    public function push(int $element): void
+    public function push($element): void
     {
-        if($this->count < $this->capacity) {
-            switch(get_debug_type($this->elements)){
-                case 'array': 
-                    $this->elements = [$element, ...$this->elements];
-                    break;
-                
-                case 'Node':
-                    $this->elements->pushStart($element);
-                    break;
-                
-                default: throw new UnexpectedValueException("UNREACHABLE!!");
-            }
-            $this->count++;
-        }else {
-            throw new OverflowException(sprintf("Stack(%d) is full. Cannot add elements.\n", $this->capacity));
-        }        
+        switch(get_debug_type($this->elements)){
+            case 'array': 
+                $this->elements = [$element, ...$this->elements];
+                break;
+            
+            case 'Node':
+                $this->elements->pushStart($element);
+                break;
+            
+            default: throw new UnexpectedValueException("UNREACHABLE!!");
+        }
+        $this->count++;
     }
 
-    public function pop(): int 
+    public function pop() 
     {
         if ($this->count <= 0) {
             throw new UnderflowException("Stack is empty\n");
@@ -75,7 +69,7 @@ class Stack
         };
     }
 
-    public function top(): int
+    public function top()
     {
         return match (get_debug_type($this->elements)) {
             'array' => $this->elements[0],

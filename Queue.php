@@ -3,44 +3,38 @@ declare(strict_types=1);
 
 class Queue
 {
-    public int $size;
     private int $count = 0;
     private array|Node $elements;
     
-    public function __construct(int $s, array|Node $type) {
-        $this->size = $s;
+    public function __construct(array|Node $type) {
         $this->elements = $type;
     }
 
-    public function enqueue(int $element): void
+    public function enqueue($element): void
     {
-        if($this->count < $this->size) {
-            switch(get_debug_type($this->elements)){
-                case 'array': 
-                    $this->elements = [...$this->elements, $element];
-                    break;
-                
-                case 'Node':
-                    $this->elements->push($element);
-                    break;
-                
-                default: throw new UnexpectedValueException("UNREACHABLE!!");
-            }
-            $this->count++;
-        }else {
-            throw new OverflowException(sprintf("Queue(%d) is full. Cannot add elements.", $this->size));
-        }        
+        switch(get_debug_type($this->elements)){
+            case 'array': 
+                $this->elements = [...$this->elements, $element];
+                break;
+            
+            case 'Node':
+                $this->elements->push($element);
+                break;
+            
+            default: throw new UnexpectedValueException("UNREACHABLE!!");
+        }
+        $this->count++;
     }
 
-    public function dequeue(): int
+    public function dequeue()
     {
         $last = null;
         switch(get_debug_type($this->elements))
         {
             case 'array':
-                $last = $this->elements[$this->count - 1];
+                $last = $this->elements[0];
                 $temp = [];
-                for($i = 0; $i < $this->count - 1; $i++){
+                for($i = 1; $i < $this->count; $i++){
                     $temp[] = $this->elements[$i];
                 }
                 $this->elements = $temp;
@@ -58,7 +52,7 @@ class Queue
         return $last;
     }
 
-    public function peek(): int
+    public function peek()
     {
         return match(get_debug_type($this->elements))
         {
@@ -67,7 +61,7 @@ class Queue
         };
     }
     
-    public function end(): int
+    public function end()
     {
         return match(get_debug_type($this->elements))
         {
@@ -83,6 +77,11 @@ class Queue
             'array' => empty($this->elements),
             'Node' => $this->elements->isEmpty(),
         };
+    }
+
+    public function count(): int
+    {
+        return $this->count;
     }
 
     public function isFull(): bool
